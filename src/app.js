@@ -1,16 +1,13 @@
 var express = require('express');
 const redis = require("redis");
 const cors = require("cors");
+require("dotenv").config();
 var app = express();
 const PORT = 8888;
 
 app.use(cors());
 app.use(express.json())
-
-let client = redis.createClient({
-   host: process.env.DB_HOST,
-   port: process.env.DB_PORT
-});
+let client = redis.createClient({url: process.env.DB_URL});
 
 client.on('error', (err) => {
   console.log(err);
@@ -30,7 +27,6 @@ app.get('/', async function (req, res) {
 
 app.post('/record', async function (req, res) {
    console.log("post");
-   console.log(req);
    const score = req.body.score;
    const name = req.body.name;
    
