@@ -7,7 +7,10 @@ const PORT = 8888;
 app.use(cors());
 app.use(express.json())
 
-let client = redis.createClient(6379);
+let client = redis.createClient({
+   host: process.env.DB_HOST,
+   port: process.env.DB_PORT
+});
 
 client.on('error', (err) => {
   console.log(err);

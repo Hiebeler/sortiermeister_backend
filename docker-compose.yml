@@ -1,0 +1,22 @@
+services:
+  api:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: "./"
+    ports:
+      - "8888:8888"
+    env_file:
+      - ./.env
+    expose:
+      - 8888
+  redis:
+    image: "redis:7-alpine"
+    ports:
+      - 6379
+    volumes:
+      - ./tmp/redis_data:/var/lib/redis/data
+
+volumes:
+  db:
+    driver: local
