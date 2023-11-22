@@ -1,20 +1,19 @@
-# Use alpine image for ligther images
-FROM node:21-alpine3.15
+FROM node:21-alpine3.17
 
+# Create app directory
 WORKDIR /app
 
-# Copy our package files as usual
-# pnp use pnpm-lock.json rather than package-lock.json
-COPY package*.json pnpm-lock.yaml /app
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json /app/
 
-# Install dependencies with pnpm and cache mount
-RUN --mount=type=cache,id=pnmcache,target=/pnpm_store \
-  pnpm config set store-dir /pnpm_store && \
-  pnpm config set package-import-method copy && \
-  pnpm install --prefer-offline --ignore-scripts --frozen-lockfile
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-# Copy remaining files
+# Bundle app source
 COPY . /app
 
-# Set ENTRYPOINT and/or CMD
-ENTRYPOINT ["node", "src/app.js"]
+EXPOSE 8888
+CMD node src/app.js
